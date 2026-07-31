@@ -1,0 +1,80 @@
+import userModel from "../models/user.model";
+import jwt from "jsonwebtoken"
+import { config } from "../config/config.js";
+
+
+
+async function sendTokenResponse(user,res,message){
+    const token = jwt.sign({
+        id:user._id,        
+    },config.JWT_SECRET,{
+        expiresIn:"7d"
+    })
+  
+    res.cookie("token",token)
+
+    res.status(200).json({
+           message,
+           sucess:true,
+           user:{
+            id: user._id,
+            email:user.email,
+            contact:user.contact,
+            fullName:user.fullName,
+            role:user.role
+           }
+    })
+}
+
+
+export const register = async (req,res) => {
+      
+    const {email,contact,password,fullName,role} = req.body;
+
+    try{
+        const existingUser = await userModel.findOne({
+            $or:[
+                {email},
+                {contact}
+            ]
+        })
+
+        if(existingUser){
+            return res.status(400).json({
+                message:"User already exists"
+            }) }
+
+            const user = await userModel.create({
+                email,
+                contact,
+                password,
+                fullName,
+                role:role === "seller"?"seller" :"buyer"
+            })
+  
+        await sendTokenResponse(user,res)
+         
+    }
+     catch (error) {
+            console.log(error) 
+            return res.status(500).json({message:"server error"})
+          }
+}
+
+export const login = async (req,res) =>{
+      const {email,password} = req.body;
+
+      const user = await userModel.findOne({email})
+
+      if(!user) {
+        return res.status(400).json({message:"Invalid email or message"})
+      }
+
+      const isMatch = await user.comparePassword(password)
+
+      if(!isMatch){
+        return res.status(400).json({message:"invalid email or password"})
+      }
+
+      await sendTokenResponse(user,res,"User logged in succesfully")
+}

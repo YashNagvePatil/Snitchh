@@ -18,5 +18,6 @@ const app = express ()
  })
 
  app.use("/api/auth",authRouter)
+ 
 
  export default app
