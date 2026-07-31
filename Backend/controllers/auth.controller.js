@@ -1,4 +1,4 @@
-import userModel from "../models/user.model";
+import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken"
 import { config } from "../config/config.js";
 
@@ -49,7 +49,7 @@ export const register = async (req,res) => {
                 contact,
                 password,
                 fullName,
-                role:role === "seller"?"seller" :"buyer"
+                role:role === "seller"?"seller":"buyer"
             })
   
         await sendTokenResponse(user,res)
