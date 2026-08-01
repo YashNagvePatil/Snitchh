@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Phone, Mail, Lock, ShoppingBag, Store, ArrowRight } from 'lucide-react';
-
+import { useAuth } from '../hook/useAuth.js';
+import { useNavigate } from 'react-router';
 const  Register = () => {
+
+   const { registerUser } = useAuth();
+   const navigate = useNavigate();
+
   const [role, setRole] = useState('buyer'); // 'buyer' | 'seller'
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,9 +20,27 @@ const  Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitted Data:', { ...formData, role });
+
+   try{
+     await registerUser({ 
+         email: formData.email,
+         password: formData.password,
+         contact: formData.contact,
+         fullName: formData.fullName,
+         role: role
+      });
+      
+      navigate('/'); 
+   }
+
+    catch(err){
+      console.log("Registration failed",err)
+    }
+
+
   };
 
   return (
