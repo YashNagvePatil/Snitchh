@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { createProductValidator } from "../validator/product.validator";
 
 
  const upload = multer({
@@ -15,4 +16,13 @@ import multer from "multer";
    * @access private
    */
 
-  router.post("/",authenticateSeller,upload.array("images",7),createProduct)
+  router.post("/",authenticateSeller,upload.array("images",7),createProductValidator,createProduct)
+
+
+  /***
+   * @route GET /api/products/seller
+   * @description get all products
+   * @access private(seller only)
+   */
+  router.get("/",getAllProducts)
+   
