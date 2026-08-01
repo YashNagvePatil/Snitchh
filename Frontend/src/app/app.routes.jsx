@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router";
 import Register from "../features/auth/pages/Register.jsx";
 import Login from "../features/auth/pages/Login.jsx";
-
+import Dashboard from "../features/products/pages/Dashboard.jsx";
+import CreateProduct from "../features/products/pages/CreateProduct.jsx";
 
 
 
  export const routes = createBrowserRouter([
     {
         path:"/",
-        element:<h1> dashboard </h1>
+        element:<Dashboard/>
     },
 
      {
@@ -18,5 +19,10 @@ import Login from "../features/auth/pages/Login.jsx";
      {
         path:"/login",
         element:<Login/>
+    },
+
+    {
+        path:"/create_Product",
+        element:<CreateProduct/>
     }
  ])
