@@ -3,6 +3,7 @@ import Register from "../features/auth/pages/Register.jsx";
 import Login from "../features/auth/pages/Login.jsx";
 import Dashboard from "../features/products/pages/Dashboard.jsx";
 import CreateProduct from "../features/products/pages/CreateProduct.jsx";
+import SellerInventory from "../features/products/pages/SellerProductDetails.jsx";
 
 
 
@@ -22,7 +23,12 @@ import CreateProduct from "../features/products/pages/CreateProduct.jsx";
     },
 
     {
-        path:"/create_Product",
+        path:"/Seller/create_Product",
         element:<CreateProduct/>
     }
+     , 
+     {
+        path:"/seller/productDetails",
+        element:<SellerInventory/>
+     }
  ])

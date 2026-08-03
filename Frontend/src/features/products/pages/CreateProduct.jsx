@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useProduct from '../hooks/useProduct.js'; 
 import { 
   Upload, 
   X, 
@@ -15,20 +16,24 @@ import {
 
 const SIZES_LIST = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 const CATEGORIES = ["Men's Shirts", "Men's Trousers", "Women's Dresses", "Women's Tops", "Outerwear", "Accessories"];
+const CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'INR'];
 
 const CreateProduct = () => {
-  const [images, setImages] = useState([]); // Array of { id, url, file }
+  const { handleCreateProduct } = useProduct();
+
+  const [images, setImages] = useState([]); 
   const [selectedSizes, setSelectedSizes] = useState(['M', 'L']);
   const [category, setCategory] = useState("Men's Shirts");
+  // FIX #1: Set default currency to first array element instead of ''
+  const [currency, setCurrency] = useState(CURRENCIES[0]); 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    price: '',
+    priceAmount: '',
     originalPrice: '',
     stock: '',
   });
 
-  // Handle image upload (Max 7 images)
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -46,7 +51,12 @@ const CreateProduct = () => {
   };
 
   const removeImage = (id) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
+    setImages((prev) => {
+      const filtered = prev.filter((img) => img.id !== id);
+      const removed = prev.find((img) => img.id === id);
+      if (removed) URL.revokeObjectURL(removed.url); // Clean up memory
+      return filtered;
+    });
   };
 
   const toggleSize = (size) => {
@@ -59,25 +69,52 @@ const CreateProduct = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (images.length === 0) {
-      toast.error('Please upload at least one product image.');
-      return;
-    }
 
+    try {
+      const data = new FormData();
 
+      // FIX #2: Append ALL required fields to FormData
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("category", category);
+      data.append("priceAmount", formData.priceAmount);
+      data.append("priceCurrency", currency);
+      data.append("stock", formData.stock);
 
+      if (formData.originalPrice) {
+        data.append("originalPrice", formData.originalPrice);
+      }
 
-    console.log('Submitted Product:', {
-      ...formData,
-      category,
-      selectedSizes,
-      imageCount: images.length,
-      images,
-    });
-    alert('Product published successfully!');
+      // Append array items for sizes
+      selectedSizes.forEach((size) => {
+        data.append("sizes", size); // Note: Change key name if backend expects 'selectedSizes'
+      });
+
+      // Append files
+      images.forEach((img) => {
+        data.append("images", img.file);
+      });
+
+      await handleCreateProduct(data);
+
+      alert('Product published successfully!');
+
+      // FIX #3: Match state key name ('priceAmount')
+      setFormData({
+        title: '',  
+        description: '',
+        priceAmount: '',
+        originalPrice: '',  
+        stock: ''
+      });
+
+      setImages([]);
+
+    } catch (error) {
+      console.error('Error publishing product:', error);
+    } 
   };
 
   return (
@@ -127,7 +164,7 @@ const CreateProduct = () => {
           </div>
         </div>
 
-        {/* Main Grid: Left = Form Info, Right = 7-Image Uploader */}
+        {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* LEFT COLUMN: Main Form Details (7 cols) */}
@@ -203,16 +240,35 @@ const CreateProduct = () => {
                 Pricing & Inventory
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                
+                {/* Currency Dropdown */}
+                <div>
+                  <label className="block text-xs font-light text-neutral-600 uppercase tracking-wider mb-1.5">
+                    Currency *
+                  </label>
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-light text-neutral-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-800 transition cursor-pointer"
+                  >
+                    {CURRENCIES.map((curr) => (
+                      <option key={curr} value={curr}>
+                        {curr}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Regular Price */}
                 <div>
                   <label className="block text-xs font-light text-neutral-600 uppercase tracking-wider mb-1.5">
-                    Selling Price ($) *
+                    Selling Price ({currency}) *
                   </label>
                   <input
                     type="number"
-                    name="price"
-                    value={formData.price}
+                    name="priceAmount"
+                    value={formData.priceAmount}
                     onChange={handleChange}
                     placeholder="68.00"
                     required
@@ -223,7 +279,7 @@ const CreateProduct = () => {
                 {/* Original Price (MSRP) */}
                 <div>
                   <label className="block text-xs font-light text-neutral-600 uppercase tracking-wider mb-1.5">
-                    Original Price ($)
+                    Original Price ({currency})
                   </label>
                   <input
                     type="number"
@@ -250,6 +306,7 @@ const CreateProduct = () => {
                     className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-light text-neutral-800 placeholder-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-800 transition"
                   />
                 </div>
+
               </div>
             </div>
 
@@ -362,7 +419,7 @@ const CreateProduct = () => {
                 {/* 2. Remaining 6 Thumbnail Slots */}
                 <div className="grid grid-cols-3 gap-2.5 pt-1">
                   {Array.from({ length: 6 }).map((_, index) => {
-                    const imgIndex = index + 1; // slots 1 to 6
+                    const imgIndex = index + 1;
                     const image = images[imgIndex];
 
                     return (
@@ -425,6 +482,6 @@ const CreateProduct = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CreateProduct
+export default CreateProduct;

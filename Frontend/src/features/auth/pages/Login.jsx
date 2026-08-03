@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ShoppingBag, Store, ArrowRight } from 'lucide-react';
+import { useAuth } from '../hook/useAuth';
+import { useNavigate } from 'react-router';
 
     const Login = () => {
-  const [role, setRole] = useState('buyer'); // 'buyer' | 'seller'
+
+   const { loginUser } = useAuth();
+   const navigate = useNavigate();
+
+  const [role,setRole] = useState('buyer'); // 'buyer' | 'seller'
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,9 +20,40 @@ import { Eye, EyeOff, Mail, Lock, ShoppingBag, Store, ArrowRight } from 'lucide-
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login Data:', { ...formData, role, rememberMe });
+
+     try{
+      const response = await loginUser({
+        email:formData.email,
+        password:formData.password
+     })
+
+     if (role == "seller"){
+           navigate("/")
+     }
+      
+     else if(role == "buyer"){
+           navigate("/seller/dashboard")
+     }
+
+       if (response?.error){
+        console.warn("login rejectoion",result.error)
+      }
+
+        if (dynacmicRole === "buyer") {
+        navigate('/');
+      } else if (dynacmicRole === "seller") {
+        navigate('/seller/dashboard');
+      }  
+         console.log('Login Data:', { ...formData, role, rememberMe });
+    } 
+    
+     catch(error){
+      console.log("login failed",error)
+     }
+
+   
   };
 
   return (

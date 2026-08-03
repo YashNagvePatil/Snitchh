@@ -1,21 +1,33 @@
-import CreateProduct from "../service/product.api.js";
+import {createProduct,getSellerProduct} from "../service/product.api.js";
 import { useDispatch } from "react-redux";
 import { setSellerProducts } from "../state/product.slice.js";
 
 
 const useProduct = () => {
-  const dispatch = useDispatch();
+  
+    const dispatch = useDispatch();
 
-  const handleCreateProduct = async (formData) => {
+  async function handleCreateProduct(formData) {
     try {
-      const response = await CreateProduct(formData);
+      const response = await createProduct(formData);
       return response.product;
     } catch (error) {
       console.error("Error creating product:", error);
     }
   };
 
-  return { handleCreateProduct };
+
+  async function handleGetSellerProduct(){
+        const data  = await getSellerProduct()
+ 
+        dispatch(setSellerProducts(data.products))
+
+        return data.products
+
+
+  }
+
+  return { handleCreateProduct,handleGetSellerProduct};
 };
 
 export default useProduct;
