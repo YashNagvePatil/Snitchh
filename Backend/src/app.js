@@ -3,7 +3,7 @@ import cors from "cors"
 import morgan from "morgan"
 import cookieParser from "cookie-parser"
 import authRouter from "../routes/auth.routes.js"
-
+import productRouter from "../routes/products.route.js"
 
 
   const app = express()
@@ -24,6 +24,7 @@ import authRouter from "../routes/auth.routes.js"
  })
 
  app.use("/auth/api",authRouter)
+ app.use("/api/products",productRouter)
  
 
  export default app

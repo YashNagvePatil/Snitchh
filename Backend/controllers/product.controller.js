@@ -1,5 +1,5 @@
-import productModel from "../models/product.model";
-import { uploadFile } from "../services/storage.service";
+import productModel from "../models/product.model.js";
+import { uploadFile } from "../services/storage.service.js";
 
 
  export async function createProduct(req,res){

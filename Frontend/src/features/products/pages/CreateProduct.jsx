@@ -61,6 +61,15 @@ const CreateProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    if (images.length === 0) {
+      toast.error('Please upload at least one product image.');
+      return;
+    }
+
+
+
+
     console.log('Submitted Product:', {
       ...formData,
       category,

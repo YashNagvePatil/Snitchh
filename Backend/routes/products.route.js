@@ -1,9 +1,10 @@
 import express from "express";
 import multer from "multer";
-import { createProductValidator } from "../validator/product.validator";
+import { createProductValidator } from "../validator/product.validator.js";
+import { authenticateSeller } from "../middlewares/auth.middleware.js";
+import { createProduct, getAllProducts} from "../controllers/product.controller.js";
 
-
- const upload = multer({
+const upload = multer({
     storage:multer.memoryStorage(),
     limits:{fileSize:5 * 1024 * 1024}, // 5MB
  })
@@ -26,3 +27,4 @@ import { createProductValidator } from "../validator/product.validator";
    */
   router.get("/",getAllProducts)
    
+  export default router;
