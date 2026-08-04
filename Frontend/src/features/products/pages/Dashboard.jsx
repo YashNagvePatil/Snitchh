@@ -10,6 +10,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
+
 // 1. Hero Banner Slides Data (4 Banners)
 const HERO_SLIDES = [
   {
@@ -83,6 +84,9 @@ const PRODUCTS = [
 ];
 
 const Dashboard = () => {
+
+
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeTab, setActiveTab] = useState('all'); // 'all' | 'men' | 'women'
   const [wishlist, setWishlist] = useState([]);
@@ -91,9 +95,15 @@ const Dashboard = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  
+    
+
     }, 5000);
+      
     return () => clearInterval(timer);
   }, []);
+ 
+  
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);

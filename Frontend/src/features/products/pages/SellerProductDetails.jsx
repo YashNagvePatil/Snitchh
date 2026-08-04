@@ -18,6 +18,8 @@ import {
   TrendingUp,
   RefreshCw
 } from 'lucide-react';
+import useProduct from "../hooks/useProduct.js"
+import { useSelector } from 'react-redux';
 
 const CATEGORIES = ["All", "Men's Shirts", "Men's Trousers", "Women's Dresses", "Women's Tops", "Outerwear", "Accessories"];
 
@@ -96,6 +98,9 @@ const SellerInventory = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [stockFilter, setStockFilter] = useState('all'); // 'all', 'in_stock', 'low_stock', 'out_of_stock'
 
+
+  const {handleGetSellerProduct} = useProduct()
+  const sellerProducts = useSelector(state => state.product.sellerProducts)
   // Stock Quick Adjust Handler
   const handleStockChange = (id, delta) => {
     setProducts((prev) =>

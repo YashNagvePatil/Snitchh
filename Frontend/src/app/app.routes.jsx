@@ -23,12 +23,21 @@ import SellerInventory from "../features/products/pages/SellerProductDetails.jsx
     },
 
     {
-        path:"/Seller/create_Product",
-        element:<CreateProduct/>
-    }
-     , 
-     {
+        path:"/seller",
+        children:[
+            {
+                path:"/seller/create_product",
+                 element:<CreateProduct/>
+            },
+
+           {
         path:"/seller/productDetails",
         element:<SellerInventory/>
-     }
+         }
+
+    ]
+       
+    }
+     , 
+    
  ])

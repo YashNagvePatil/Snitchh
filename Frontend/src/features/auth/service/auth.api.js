@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { get } from 'mongoose'
 
  const authApiInstance = axios.create({
     baseURL:"http://localhost:3000/api/auth",
@@ -24,4 +25,10 @@ import axios from 'axios'
         password
     })
     return response.data
+ }
+
+ export async function  getMe () {
+     const response = await authApiInstance.get("/me")
+
+     return response.data
  }
