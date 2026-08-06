@@ -23,7 +23,7 @@ import productRouter from "../routes/products.route.js"
     res.send("Hello World!");
  })
 
- app.use("/auth/api",authRouter)
+ app.use("/api/auth",authRouter)
  app.use("/api/products",productRouter)
  
 

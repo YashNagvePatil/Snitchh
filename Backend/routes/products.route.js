@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import { createProductValidator } from "../validator/product.validator.js";
 import { authenticateSeller } from "../middlewares/auth.middleware.js";
-import { createProduct, getAllProducts} from "../controllers/product.controller.js";
+import { createProduct, getAllProducts, getSellerProducts} from "../controllers/product.controller.js";
 
 const upload = multer({
     storage:multer.memoryStorage(),
@@ -25,6 +25,17 @@ const upload = multer({
    * @description get all products
    * @access private(seller only)
    */
+  router.get("/seller",authenticateSeller,getSellerProducts)
+ 
+  /**
+   * @route GET /api/products
+   * @description Get all products
+   * @access Public
+   */
+
   router.get("/",getAllProducts)
-   
+
+
+
+
   export default router;
