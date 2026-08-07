@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { get } from 'mongoose'
+
 
  const authApiInstance = axios.create({
     baseURL:"http://localhost:3000/api/auth",

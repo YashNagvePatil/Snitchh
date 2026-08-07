@@ -9,7 +9,9 @@ import {
   SlidersHorizontal,
   CheckCircle2
 } from 'lucide-react';
-
+import { useSelector } from 'react-redux';
+import useProduct from '../hooks/useProduct.js';
+import { useNavigate } from 'react-router';
 
 // 1. Hero Banner Slides Data (4 Banners)
 const HERO_SLIDES = [
@@ -83,8 +85,10 @@ const PRODUCTS = [
   },
 ];
 
-const Dashboard = () => {
-
+const Home = () => {
+  const navigate = useNavigate()
+  const  {handleGetAllproducts} = useProduct()
+  const products = useSelector(state => state.product.products)
 
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -92,15 +96,24 @@ const Dashboard = () => {
   const [wishlist, setWishlist] = useState([]);
 
   // Auto-slide effect (every 5 seconds)
+
+  console.log(products)
+
+
+  // useEffect(()=>{
+  //   handleGetAllproducts()
+  // },[])
+
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   
     
 
-    }, 5000);
-      
+    }, 5000);    
     return () => clearInterval(timer);
+      
   }, []);
  
   
@@ -342,6 +355,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <div
+              onClick={()=>navigate(`/product/${product._id}`)}             
               key={product.id}
               className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
@@ -422,4 +436,4 @@ const Dashboard = () => {
   );
 }
 
-export default Dashboard;
+export default Home;

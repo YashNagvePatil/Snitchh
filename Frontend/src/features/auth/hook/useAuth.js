@@ -25,10 +25,20 @@ import { useDispatch } from "react-redux";
 
 
     async function handleGetMe(){
-        const data = await getMe()
-  
-        dispatch(setUser(data.user))
 
+      try{
+         dispatch(sertLoading(true))
+        const data = await getMe()  
+        dispatch(setUser(data.user))
+      }
+       catch(err){
+        console.log(err)
+       }
+
+       finally{
+           dispatch(sertLoading(false))
+       }
+     
     }
 
     return { registerUser, loginUser,handleGetMe };     

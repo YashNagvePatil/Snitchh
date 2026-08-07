@@ -26,26 +26,29 @@ import { useNavigate } from 'react-router';
      try{
       const response = await loginUser({
         email:formData.email,
-        password:formData.password
+        password:formData.password,
      })
+  
+      const userRole =(
+        response?.role ||
+        response?.user?.role ||
+        role 
+      ) ?.toLowerCase()
 
-     if (role == "seller"){
+      if(userRole == "buyer"){
            navigate("/")
      }
-      
-     else if(role == "buyer"){
-           navigate("/seller/dashboard")
+
+     else if (userRole == "seller"){
+           navigate("/seller/productDetails")
      }
+         
 
        if (response?.error){
         console.warn("login rejectoion",result.error)
       }
 
-        if (dynacmicRole === "buyer") {
-        navigate('/');
-      } else if (dynacmicRole === "seller") {
-        navigate('/seller/dashboard');
-      }  
+        
          console.log('Login Data:', { ...formData, role, rememberMe });
     } 
     

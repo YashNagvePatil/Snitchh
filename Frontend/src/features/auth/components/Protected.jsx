@@ -7,7 +7,7 @@ import { Navigate } from "react-router";
     const user = useSelector(state => state.auth.user)
     const loading = useSelector(state => state.auth.loading)
 
-    if(loading){
+    if(!loading){
         return <div>Loading...</div>
     }
     

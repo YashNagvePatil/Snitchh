@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo,useEffect } from 'react';
 import { 
   Plus, 
   Search, 
@@ -100,6 +100,13 @@ const SellerInventory = () => {
 
 
   const {handleGetSellerProduct} = useProduct()
+  const SellerProducts = useSelector(state=>state.product.sellerProducts)
+  useEffect(()=>{
+    handleGetSellerProduct()
+  },[])
+ 
+  console.log(SellerProducts)
+
   const sellerProducts = useSelector(state => state.product.sellerProducts)
   // Stock Quick Adjust Handler
   const handleStockChange = (id, delta) => {

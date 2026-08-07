@@ -1,16 +1,18 @@
 import { createBrowserRouter } from "react-router";
 import Register from "../features/auth/pages/Register.jsx";
 import Login from "../features/auth/pages/Login.jsx";
-import Dashboard from "../features/products/pages/Dashboard.jsx";
+import Home from "../features/products/pages/Home.jsx"
 import CreateProduct from "../features/products/pages/CreateProduct.jsx";
 import SellerInventory from "../features/products/pages/SellerProductDetails.jsx";
+import Protected from "../features/products/components/Protected.jsx";
+import ProductsDetails from "../features/products/pages/ProductsDetails.jsx";
 
 
 
  export const routes = createBrowserRouter([
     {
         path:"/",
-        element:<Dashboard/>
+        element:<Home/>
     },
 
      {
@@ -23,16 +25,25 @@ import SellerInventory from "../features/products/pages/SellerProductDetails.jsx
     },
 
     {
+            path:"/product/:productId",
+            element:<ProductsDetails/>
+    },
+
+    {
         path:"/seller",
         children:[
             {
                 path:"/seller/create_product",
-                 element:<CreateProduct/>
+                 element:<Protected role="seller">
+                              <CreateProduct /> 
+                          </Protected>
             },
 
            {
         path:"/seller/productDetails",
-        element:<SellerInventory/>
+        element: <Protected>
+                  <SellerInventory/> 
+                </Protected>   
          }
 
     ]
